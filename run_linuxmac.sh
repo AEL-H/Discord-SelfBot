@@ -2,9 +2,15 @@
 
 cd "$(dirname "$0")"
 if [ $? -eq 0 ]; then
-    echo "" 
+    if [ "$VIRTUAL_ENV" = "$(readlink -f ./venv/)" ]; then
+        echo "virtualenv is active"
+    else
+        echo "virtualenv is not active"
+	exit 254
+    fi
 else
     echo "Unable to set script's directory as the current working directory. You will need to make sure you run the script from it's directory."
+    exit 254
 fi
 
 branch=$(git rev-parse --abbrev-ref HEAD)
@@ -77,24 +83,24 @@ min_updater() {
 
 run_bot() {
 	echo "Checking requirements..."
-	if hash python3 2>/dev/null; then # TODO abstracify all this which mirrors above an also look up boolean operators in sh
-        echo "Using pip as a python3 module"
-        echo "Upgrading requirements"
-        if python3 -m pip install --user --upgrade -r requirements.txt; then
-            echo "Starting bot..."
-            python3 loopself.py
-            ret=$?
-            if [ $ret == "15" ]; then
-                min_updater
-                run_bot
+	if hash python3 2>/dev/null; then # TODO abstractify all this which mirrors above an also look up boolean operators in sh
+            echo "Using pip as a python3 module"
+            echo "Upgrading requirements"
+            if python3 -m pip install --user --upgrade -r requirements.txt; then
+                echo "Starting bot..."
+                python3 loopself.py
+                ret=$?
+                if [ $ret == "15" ]; then
+                    min_updater
+                    run_bot
+                else
+                    echo "Shutting down"
+                fi
             else
-                echo "Shutting down"
+                echo "Requirements installation failed"
+                exit 254
             fi
-        else
-            echo "Requirements installation failed"
-            exit 254
-        fi
-	elif hash python 2>/dev/null; then # TODO abstracify all this which mirrors above an also look up boolean operators in sh
+	    elif hash python 2>/dev/null; then # TODO abstractify all this which mirrors above an also look up boolean operators in sh
 		case "$(python --version 2>&1)" in
 			*" 3."*)
 				echo ""
@@ -105,25 +111,24 @@ run_bot() {
 				exit
 				;;
 		esac
-        echo "Using pip as a python3 module"
-        echo "Upgrading requirements"
-        if python -m pip install --user -r requirements.txt; then
-            echo "Starting bot..."
-            python loopself.py
-            ret=$?
-            if [ $ret == "15" ]; then
-                min_updater
-                run_bot
+            echo "Using pip as a python3 module"
+            echo "Upgrading requirements"
+            if python -m pip install --user -r requirements.txt; then
+                echo "Starting bot..."
+                python loopself.py
+                ret=$?
+                if [ $ret == "15" ]; then
+                    min_updater
+                    run_bot
+                else
+                    echo "Shutting down"
+                fi
             else
-                echo "Shutting down"
+                echo "Requirements installation failed"
+                exit 254
             fi
-        else
-            echo "Requirements installation failed"
-            exit 254
-        fi
-
 	else
-		echo "You do not appear to have Python 3 installed"
+            echo "You do not appear to have Python 3 installed"
 	fi
 
 }
