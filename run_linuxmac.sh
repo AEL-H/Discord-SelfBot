@@ -14,7 +14,7 @@ updater () {
 	if hash git 2>/dev/null; then
 		echo "Fetching origin"
 		git init >/dev/null 2>&1
-		git remote add origin https://github.com/appu1232/Discord-Selfbot.git >/dev/null 2>&1
+		git remote add origin https://github.com/AEL-H/Discord-Selfbot.git >/dev/null 2>&1
 		git fetch origin $branch
 		if [ -d "settings" ]; then
 			cp -r settings settings_backup
@@ -47,8 +47,6 @@ updater () {
 		sleep 1
 	else
 		echo "You do not have git installed. Auto-update is not currently supported" # TODO HTTP update
-		echo "Git is almost certainly available from your package manager. Install with:"
-		echo "sudo apt-get install git-all"
 	fi
 }
 
@@ -74,8 +72,6 @@ min_updater() {
 		sleep 1
 	else
 		echo "You do not have git installed. Auto-update is not currently supported" # TODO HTTP update
-		echo "Git is almost certainly available from your package manager. Install with:"
-		echo "sudo apt-get install git-all"
 	fi
 }
 
@@ -105,7 +101,7 @@ run_bot() {
 				;;
 			*)
 				echo "Wrong Python version!"
-				echo "You need python 3.5.2 or up to use this bot!"
+				echo "You need python 3.5.2 or above to use this bot!"
 				exit
 				;;
 		esac
