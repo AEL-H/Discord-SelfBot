@@ -15,6 +15,14 @@ import numpy as np
 
 matplotlib.use('Agg')
 
+BG_COLOUR = None 
+RESOLUTION = {'width' : 1920, 'height' : 1080} 
+MAX_WORDS = 1000 
+FILENAME = "wordcloud.png"
+MASK_PATH = "heartmask.png"
+FONT_PATH = "C:/Windows/Fonts/I Love What You Do!!...ttf" 
+MODE = "RGBA"
+
 class WC:
     def __init__(self, bot):
         self.bot = bot
@@ -26,14 +34,14 @@ class WC:
         print(user.id)
         text = ""
         channel = ctx.message.channel
-        async for message in channel.history(limit=10**10):
+        async for message in channel.history(limit=None):
             if message.author.id != user.id:
                 continue
             text += message.content
             text += " "
-        wc = WordCloud(width=1920, height=1080, background_color="white", max_words=1000).generate(text)
-        wc.to_file("wordcloud.png")
-        wordcloudfile = discord.File(fp=open(os.path.join(os.getcwd(),"wordcloud.png"),'rb'))
+        wc = WordCloud(width=RESOLUTION['width'], height=RESOLUTION['height'], background_color=BG_COLOUR, max_words=MAX_WORDS, mode=MODE).generate(text)
+        wc.to_file(FILENAME)
+        wordcloudfile = discord.File(fp=open(os.path.join(os.getcwd(),FILENAME),'rb'))
         await channel.send(file=wordcloudfile)
         
     @commands.command(pass_context=True)
@@ -43,15 +51,15 @@ class WC:
         print(user.id)
         text = ""
         channel = ctx.message.channel
-        async for message in channel.history(limit=10**10):
+        async for message in channel.history(limit=None):
             if message.author.id != user.id:
                 continue
             text += message.content
             text += " "
-        the_mask = np.array(Image.open("heartmask.png"))
-        wc = WordCloud(width=1920, height=1080, background_color="white", max_words=1000,font_path="C:/Windows/Fonts/I Love What You Do!!...ttf", mask=the_mask).generate(text)        
-        wc.to_file("wordcloud.png")
-        wordcloudfile = discord.File(fp=open(os.path.join(os.getcwd(),"wordcloud.png"),'rb'))
+        the_mask = np.array(Image.open(MASK_PATH))
+        wc = WordCloud(width=RESOLUTION['width'], height=RESOLUTION['height'], background_color=BG_COLOUR, max_words=MAX_WORDS,font_path=FONT_PATH, mask=the_mask).generate(text)        
+        wc.to_file(FILENAME)
+        wordcloudfile = discord.File(fp=open(os.path.join(os.getcwd(),FILENAME),'rb'))
         await channel.send(file=wordcloudfile)        
 
 
