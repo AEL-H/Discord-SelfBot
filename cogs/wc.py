@@ -25,23 +25,12 @@ class WC:
         user = ctx.message.mentions[0]
         print(user.id)
         text = ""
-        #server = ctx.message.guild
-        #print(server.id)
         channel = ctx.message.channel
         async for message in channel.history(limit=10**10):
             if message.author.id != user.id:
                 continue
             text += message.content
             text += " "
-        #for channel in server.channels:
-        #    try:
-        #        async for msg in self.bot.logs_from(channel, limit=10**10):
-        #            if msg.author.id != user.id:
-        #                continue
-        #            text += msg.content
-        #            text += " "
-        #    except Exception:
-        #        continue
         wc = WordCloud(width=1920, height=1080, background_color="white", max_words=1000).generate(text)
         wc.to_file("wordcloud.png")
         wordcloudfile = discord.File(fp=open(os.path.join(os.getcwd(),"wordcloud.png"),'rb'))
@@ -53,23 +42,12 @@ class WC:
         user = ctx.message.mentions[0]
         print(user.id)
         text = ""
-        #server = ctx.message.guild
-        #print(server.id)
         channel = ctx.message.channel
         async for message in channel.history(limit=10**10):
             if message.author.id != user.id:
                 continue
             text += message.content
             text += " "
-        #for channel in server.channels:
-        #    try:
-        #        async for msg in self.bot.logs_from(channel, limit=10**10):
-        #            if msg.author.id != user.id:
-        #                continue
-        #            text += msg.content
-        #            text += " "
-        #    except Exception:
-        #        continue
         the_mask = np.array(Image.open("heartmask.png"))
         wc = WordCloud(width=1920, height=1080, background_color="white", max_words=1000,font_path="C:/Windows/Fonts/I Love What You Do!!...ttf", mask=the_mask).generate(text)        
         wc.to_file("wordcloud.png")
